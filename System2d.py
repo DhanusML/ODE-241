@@ -156,7 +156,7 @@ class System2D:
                     xMax=10.0,
                     yMin=-10.0,
                     yMax=10.0,
-                    spacing=0.25,
+                    spacing=1,
                     scl=None):
         """
         Returns the axis after plotting the quiver.
