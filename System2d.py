@@ -89,10 +89,7 @@ class System2D:
 
     def plot_phase_diagram(self,
                            axis,
-                           x0=np.array([0, 0]),
-                           labelX='x',
-                           labelY='y',
-                           title='Phase Portrait'):
+                           x0=np.array([0, 0])):
         """
         Returns the axis after plotting the phase portrait.
         (If both time series and phase plot of a data is required,
@@ -106,32 +103,18 @@ class System2D:
         :param x0: initial value
         :type x0: np.array
 
-        :param labelX: the x-label of the plot
-        :type labelX: str
-
-        :param labelY: the y-label of the plot
-        :type labelY: str
-
-        :param title: the graph title
-        :type title: str
-
         :return axis: the axis after plotting
         :rtype: matplotlib.axes._subplots.AxesSubplot
         """
         self.x0 = x0
         self.__generate_data()
         axis.plot(self.__data[1], self.__data[2])
-        axis.set(xlabel=labelX)
-        axis.set(ylabel=labelY)
-        axis.set(title=title)
         return axis
 
     def plot_time_series(self,
-                         axis: plt.axes,
+                         axis,
                          x0=np.array([0, 0]),
-                         switch='x',
-                         label="variable",
-                         title="time series"):
+                         switch='x'):
         """
         Returns the time series portrait.
         (If both time series and phase plot of a data is required,
@@ -152,14 +135,11 @@ class System2D:
         :param label: the label for the vertical axis
         :type label: str
 
-        :param title: the plot title
-        :type title: str
-
         :returns axis: the plotted axis
         :rtype: matplotlib.axes._subplots.AxesSubplot
         """
         # If the data is not already present, generate.
-        if self.__data == [] or x0 != self.x0:
+        if len(self.__data) == 0 or np.all(x0 - self.x0):
             self.x0 = x0
             self.__generate_data()
 
@@ -176,7 +156,8 @@ class System2D:
                     xMax=10.0,
                     yMin=-10.0,
                     yMax=10.0,
-                    spacing=0.25):
+                    spacing=0.25,
+                    scl=None):
         """
         Returns the axis after plotting the quiver.
 
@@ -198,6 +179,9 @@ class System2D:
         :param spacing: the spacing between the contours
         :type spacing: float
 
+        :param scl: the unit of the arrow. If not specified, autoscales
+        :type scl: float
+
         :returns axis: the plotted axis
         :rtype: matplotlib.axes._subplots.AxesSubplot
         """
@@ -206,11 +190,11 @@ class System2D:
                            np.arange(yMin, yMax, spacing))
         u, v = self.f(x, y)
 
-        axis.quiver(x, y, u, v)
+        axis.quiver(x, y, u, v, scale=scl)
         return axis
 
     def plot_orbits(self,
-                    axis: plt.axes,
+                    axis,
                     xMin=-5.0,
                     xMax=5.0,
                     yMin=-5.0,
